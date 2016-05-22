@@ -31,7 +31,8 @@ class RandomNumberGame:
         print("Do you want to play another round?")
         self.restart = input()
         if (self.restart == "yes") or (self.restart == "Yes"):
-            x = RandomNumberGame
+            x = RandomNumberGame()
+            x.runGame()
         else:
             sys.exit()
 
