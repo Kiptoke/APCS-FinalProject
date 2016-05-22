@@ -3,18 +3,22 @@
 
 import random
 import sys
+import math
 
-print("\t------ NEVERENDING DUNGEON CRAWLER ------\n")
+print("\t------ InfiniDungeon ------\n")
 
-class Entity():                                 # TODO: better get some documentation
-    
-    def __init__(self, hp, attack, defense):
+class Entity():                                 
+        
+    def __init__(self, hp=10, attack=1.0, defense=1.0):
         self.health = hp
         self.atk = attack
         self.defn = defense
         
     def setHealth(self, hp):
-        self.health = hp
+        if self.health <= 0:
+            self.health = 0
+        else:
+            self.health = hp
     def setAttack(self, attack):
         self.atk = attack
     def setDefense(self, defense):
@@ -33,81 +37,136 @@ class Player(Entity):
     def upgrade(self):
         print("You enter a shop and inspect the wares:\n")
         print("1. Health Upgrade (from " + str(self.getHealth()) + " to " + str(self.getHealth() + 5) + ")")
-        print("2. Sword Upgrade (from " + str(self.getAttack()) + " to " + str(self.getAttack() + 0.1) + ")")
-        print("3. Shield Upgrade (from " + str(self.getDefense()) + " to " + str(self.getDefense() + 0.1) + ")")
+        print("2. Sword Upgrade (from " + str(self.getAttack()) + " to " + str(self.getAttack() + 0.5) + ")")
+        print("3. Shield Upgrade (from " + str(self.getDefense()) + " to " + str(self.getDefense() + 0.5) + ")")
 
+        choice = input("1, 2 or, 3: ")
+
+        return choice
+        
     def isPlayer(self):
         return True
 
+    def toString(self):
+        print("Player statistics:\nHealth: " + str(self.getHealth()) + "\nAttack Modifier: " + str(self.getAttack()) + "\nDefense Modifier: " + str(self.getDefense()) +"\n")
+        
 class Enemy(Entity):
     'The enemy - objective: to kill you'
-
+        
     def isPlayer(self):
         return False
-    
+
+    def toString(self):
+        print("Enemy statistics:\nHealth: " + str(self.getHealth()) + "\nAttack Modifier: " + str(self.getAttack()) + "\nDefense Modifier: " + str(self.getDefense()) +"\n")
+       
+        
 class Dungeon():
-    'Welcome. You are forever trapped. Welcome to the Dungeon.'
-    playerRound = 0
-    
+    'what do I put here'    #actually find something to put here
+    playedGames = 0
+
     def __init__(self):
         self.level = 1
-        Dungeon.playerRound += 1
-        
-    def fight_flight(self):                             
-        print("You encounter a monster!")
-        print("Will you fight it, or will you run away? (write 'f' or 'r')\n")
+
+        self.hero = Player()
+    
+        Dungeon.playedGames += 1
+
+    def createEncounter(self):
+        self.monster = Enemy()
+
+        self.monster.setHealth(random.randint(self.level * 5, (self.level * 5) + 10))
+        self.monster.setAttack(random.randint(self.level, self.level * 5) / 10) 
+        self.monster.setDefense(random.randint(self.level, self.level * 5) / 10)
+
+        print("You encounter a monster!\n")
+        self.monster.toString()
+        self.fight_flight()
+                          
+    def fight_flight(self):
+        print("Will you fight the enemy, or will you run away? (write 'f' or 'r')\n")
         fight = input("CHOICE: ")
+        print
 
         if fight == "f":
-            print("fight")
-            # TODO: find way to put in fight method
+            self.fight(self.hero, self.monster)
         elif fight == "r":
-            print("You run!")
-            run()
-            
+            print("You attempt to run!\n")
+            self.run()
+
     def run(self):
-        change = random.randint(1, 10)
-        if change >= 7:
-            print("You run away!")
+        chance = random.randint(1, 10)
+        if chance >= 7:
+            print("You ran away!\n")
             self.level += 1
-            fight_flight()
+            print("You delve deeper into the dungeons. Welcome to level " + str(self.level) + "\n")
+
+            self.createEncounter()
         else:
-            print("You trip and fall flat on your face.")
-            # TODO: put in fight method
-            
-    def fight(self, attacker, target):                              # TODO: remove testing code eventually
-        print("Health of attacker: " + str(attacker.getHealth()))   # TODO: review fight method
-        print("Health of target: " + str(target.getHealth()))
-        print("atk mod of attacker: " + str(attacker.getAttack()))
-        print("def mod of target: " + str(target.getAttack()))
-        rawAttack = random.randint(1, 10) * attacker.getAttack()
-        print("raw attack: " + str(rawAttack))
-        enemyDefense = random.randint(1, 5) * target.getDefense()
-        print("enemy defense: " + str(enemyDefense))
-        totalAttack = rawAttack - enemyDefense
+            print("You trip and fall flat on your face.\n")
+            self.fight(self.monster, self.hero)
+
+    def fight(self, attacker, target):
+
+        attacker.toString()
+        target.toString()
         
+        rawAttack = random.randint(1, 10) * attacker.getAttack()
+        enemyDefense = random.randint(1, 5) * target.getDefense()
+        totalAttack = math.floor(rawAttack - enemyDefense)
+
         if totalAttack <= 0:
             totalAttack = 0
 
-        print(str(totalAttack))
+        if attacker.isPlayer() == True:
+            print("You attack for " + str(totalAttack) + " damage!\n")
+        elif attacker.isPlayer() == False:
+            print("The monster attacks for " + str(totalAttack) + " damage!\n")
         
         target.setHealth(target.getHealth() - totalAttack)
 
-        print("Health of target: " + str(target.getHealth()))
-
+        if target.isPlayer() == True:
+            print("You are at " + str(target.getHealth()) + " health!\n")
+        elif target.isPlayer() == False:
+            print("The monster is at " + str(target.getHealth()) + " health!\n")
+            
         self.checkDeath(target)
 
     def checkDeath(self, entity):
         health = entity.getHealth()
-        if (health <= 0) and (entity.isPlayer() == True):
-            print("You perish in the dungeons.")
-            sys.exit()
-        elif (health <= 0) and (entity.isPlayer() == False):
-            print("You have vanquished the enemy!")
+        if (health <= 0):
+            if (entity.isPlayer() == True):
+                print("You have been slain!")
+                sys.exit()
+            elif (entity.isPlayer() == False):
+                print("You have defeated the enemy!\n")
+                self.level += 1
+                self.victoryUpgrade()
+        elif (health > 0):
+            if (entity.isPlayer() == False):
+                print("The monster counterattacks!\n")
+                self.fight(self.monster, self.hero)
+            elif (entity.isPlayer() == True):
+                self.fight_flight()
+                
+    def victoryUpgrade(self):
+
+        option = self.hero.upgrade()
+
+        if option == "1":
+            self.hero.setHealth(self.hero.getHealth() + 5)
+            print("You are now at " + str(self.hero.getHealth()) + " health!\n")
+        elif option == "2":
+            self.hero.setAttack(self.hero.getAttack() + 0.5)
+            print("You now have a " + str(self.hero.getAttack()) + " attack modifier!\n")
+        elif option == "3":
+            self.hero.setDefense(self.hero.getDefense() + 0.5)
+            print("You now have a " + str(self.hero.getDefense()) + " attack modifier!\n")
+
+        print("You delve deeper into the dungeons. Welcome to level " + str(self.level) + "\n")
+
+        self.createEncounter()
             
-# TODO: remove this test code
+# ---- Main Code ----
 
-testD = Dungeon()
-
-
-# TODO: write main code
+infiniDungeon = Dungeon()
+infiniDungeon.createEncounter()
