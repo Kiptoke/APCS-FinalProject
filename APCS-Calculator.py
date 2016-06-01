@@ -1,12 +1,14 @@
 # Andrew Zhou
 # Calculator Program - Final Project
 
+# ------ Import Libraries ------
+
 from datetime import datetime
 import math
 
-# ---Methods---
+# ------ Functions ------
 
-def get_time():
+def get_time():                                         # Function that gets the time and prints it
     now = datetime.now()
 
     if (now.hour > 12) and (now.minute < 10):
@@ -20,25 +22,25 @@ def get_time():
 
     print("")
 
-def addition(num1, num2):
+def addition(num1, num2):                               # Addition Function
     return num1 + num2
 
-def subtraction(num1, num2):
+def subtraction(num1, num2):                            # Subtraction Function
     return num1 - num2
 
-def multiplication(num1, num2):
+def multiplication(num1, num2):                         # Multiplication Function
     return num1 * num2
 
-def division(dividend, divisor):
+def division(dividend, divisor):                        # Division Function
     return float(dividend / divisor)
 
-def int_division(dividend, divisor):
+def int_division(dividend, divisor):                    # Integer Division Function
     return int(dividend // divisor)
 
-def modular(num, mod):
+def modular(num, mod):                                  # Modular Arithmetic Function
     return num % mod
 
-def exponential(num, exponent):
+def exponential(num, exponent):                         # Exponential Function
     i = 0
     final = num
     if exponent == 1:
@@ -51,33 +53,33 @@ def exponential(num, exponent):
             i += 1
         return final
 
-def square_root(num):
+def square_root(num):                                   # Square Root Function
     return math.sqrt(num)
 
 # Area Formulas
 
-def area_quad(length, height):
+def area_quad(length, height):                          # Area of a Quadrilateral - except Trapezoids
     if length == height:
         return exponential(length, 2)
     else:
         return length * height
 
-def area_quad_diag(diag1, diag2):
+def area_quad_diag(diag1, diag2):                       # Area of a Quqadrilateral - diagonals
     return (diag1 * diag2) / 2
 
-def area_triangle(base, height):
+def area_triangle(base, height):                        # Area of a Triangle
     return (base * height) / 2
 
-def area_trapezoid(base1, base2, height):
+def area_trapezoid(base1, base2, height):               # Area of a Trapezoid
     bases = base1 + base2
     return (bases * height) / 2
 
-def area_circle(radius):
-    return math.pi * exponential(radius, 2)
+def area_circle(radius):                                # Area of a Circle
+    return math.pi * exponential(radius, 2) 
 
 # Special Formulas
 
-def circ_circle(length, diam_check):
+def circ_circle(length, diam_check):                    # Circumference of a Circle
     if diam_check:
         return math.pi * length
     elif not diam_check:
@@ -85,7 +87,7 @@ def circ_circle(length, diam_check):
 
 # Interactive Methods
 
-def calculator(op):
+def calculator(op):                                     # Takes User Input and leads it to the proper function
     if op == "a":
         num1 = float(input("Please input the first number: "))
         num2 = float(input("Please input the second number: "))
@@ -155,7 +157,7 @@ def calculator(op):
     else:
         print("ERROR: invalid input")
 
-def user_input():
+def user_input():                                       # Gets user input
     print("LIST OF OPERATIONS:\n")
     print("MATHEMATICAL OPERATIONS")
     print(" a: Addition\n s: Subtraction\n m: Multiplication\n d: Division\n id: Integer Division\n mod: Modular Arithmetic\n sq: Square Root\n")
@@ -167,7 +169,7 @@ def user_input():
     user = input("Please choose a mathematical operation: ")
     calculator(user)
 
-def restart():
+def restart():                                          # Restart Function - asks if user wants to use the calculator again
     print("Do you want to restart the calculator? (type 'y' or 'n')")
     restart_check = input()
 
@@ -180,7 +182,7 @@ def restart():
     else:
         print("Thank you for using the PyCalculator!")
 
-# ---Main Code---
+# ------ Main Code ------
 
 print("\t------CALCULATOR------\n")
 
