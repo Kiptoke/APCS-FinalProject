@@ -93,7 +93,6 @@ class Dungeon():
     def fight_flight(self):                                         # Asks if user wants to fight the monster or run
         print("Will you fight the enemy, or will you run away? (write 'f' or 'r')\n")
         fight = input("CHOICE: ")
-        print
 
         if fight == "f":
             self.fight(self.hero, self.monster)
